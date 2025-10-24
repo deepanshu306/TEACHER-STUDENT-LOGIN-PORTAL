@@ -1,0 +1,116 @@
+U<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="login">
+    <div class="container">
+        <section class="hero">
+            <div>
+                <span class="badge"><i class="fas fa-bolt"></i> Unified Campus Hub</span>
+                <h1>Deliver a calmer day for every teacher and student</h1>
+                <p>
+                    Manage admissions, daily attendance, academic performance, and learning resources from a single,
+                    secure workspace built for modern colleges.
+                </p>
+                <div class="resource-meta" style="margin-top: 18px;">
+                    <span><i class="fas fa-lock"></i> Role-based access</span>
+                    <span><i class="fas fa-chart-line"></i> Real-time analytics</span>
+                    <span><i class="fas fa-cloud-upload-alt"></i> Seamless resource sharing</span>
+                </div>
+            </div>
+            <ul class="hero-highlights">
+                <li><i class="fas fa-check-circle"></i> Preconfigured flows for admissions, attendance, and grading.</li>
+                <li><i class="fas fa-user-shield"></i> Secure logins for faculty and students with audit trails.</li>
+                <li><i class="fas fa-mobile-alt"></i> Fully responsive interface for tablet and mobile classrooms.</li>
+            </ul>
+        </section>
+
+        <div class="auth-layout">
+            <section class="login-container">
+                <div class="login-form">
+                    <h2><i class="fas fa-user-graduate"></i> Sign in to continue</h2>
+                    <p class="subtitle" style="margin-bottom: 20px;">Choose your role to access tailored dashboards.</p>
+
+                    <div class="login-options">
+                        <div class="login-option active" id="teacherOption" onclick="selectLoginOption('teacher')">Teacher</div>
+                        <div class="login-option" id="studentOption" onclick="selectLoginOption('student')">Student</div>
+                    </div>
+
+                    <div id="teacherLogin">
+                        <div class="form-group">
+                            <label for="teacherUsername">Faculty ID</label>
+                            <input type="text" id="teacherUsername" placeholder="Enter username" value="teacher">
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherPassword">Password</label>
+                            <input type="password" id="teacherPassword" placeholder="Enter password" value="password">
+                        </div>
+                        <button onclick="login('teacher')"><i class="fas fa-chalkboard-teacher"></i> Login as Teacher</button>
+
+                        <details class="login-info" style="margin-top: 20px;" open>
+                            <summary><h4>Demo credentials</h4></summary>
+                            <p>Faculty sandbox account:</p>
+                            <ul>
+                                <li>Username: <strong>teacher</strong></li>
+                                <li>Password: <strong>password</strong></li>
+                            </ul>
+                        </details>
+                    </div>
+
+                    <div id="studentLogin" class="hidden">
+                        <div class="form-group">
+                            <label for="studentID">Student ID</label>
+                            <input type="text" id="studentID" placeholder="e.g., STU001">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentPassword">Password</label>
+                            <input type="password" id="studentPassword" placeholder="Default password is password" value="password">
+                        </div>
+                        <button onclick="login('student')"><i class="fas fa-user"></i> Login as Student</button>
+
+                        <details class="login-info" style="margin-top: 20px;" open>
+                            <summary><h4>Need access?</h4></summary>
+                            <p>Default student password: <strong>password</strong></p>
+                            <p>Your ID is created by faculty when they enrol you. Sample IDs:</p>
+                            <ul>
+                                <li>STU001</li>
+                                <li>STU002</li>
+                                <li>STU003</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="login-sidebar">
+                <div class="info-card">
+                    <h3>Why institutions choose us</h3>
+                    <ul class="hero-highlights">
+                        <li><i class="fas fa-layer-group"></i> All operational workflows in one platform.</li>
+                        <li><i class="fas fa-bell"></i> Smart nudges for pending fees, attendance, and grades.</li>
+                        <li><i class="fas fa-file-export"></i> Export-ready insights for accreditation bodies.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h3>Key metrics at a glance</h3>
+                    <ul class="metrics">
+                        <li><span>Onboarded Students</span> <span>250+</span></li>
+                        <li><span>Faculty Actions / Day</span> <span>180</span></li>
+                        <li><span>Resources Shared</span> <span>480</span></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <footer>Student Management System &copy; 2025 &middot; Built for seamless collaboration</footer>
+    </div>
+
+    <div id="toastStack" class="toast-stack"></div>
+    <script src="js/app.js"></script>
+</body>
+</html>

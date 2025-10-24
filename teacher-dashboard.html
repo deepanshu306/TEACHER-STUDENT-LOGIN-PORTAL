@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard | Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="dashboard" data-role="teacher">
+    <div id="appContainer" class="container">
+        <header>
+            <div>
+                <h1><i class="fas fa-user-graduate"></i> Student Management System</h1>
+                <p class="subtitle" id="roleSubtitle">Manage student records, attendance, grades, and fees</p>
+            </div>
+            <div class="user-info">
+                <span id="userWelcome">Welcome, User!</span>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <div class="quick-actions">
+            <button class="quick-action" onclick="showTab('students')">
+                <i class="fas fa-user-plus"></i>
+                <span class="action-title">Manage Students</span>
+                <span class="action-subtitle">Add or edit student records in one place.</span>
+            </button>
+            <button class="quick-action" onclick="showTab('attendance')">
+                <i class="fas fa-calendar-check"></i>
+                <span class="action-title">Mark Attendance</span>
+                <span class="action-subtitle">Capture daily presence across your classes.</span>
+            </button>
+            <button class="quick-action" onclick="showTab('grades')">
+                <i class="fas fa-clipboard-check"></i>
+                <span class="action-title">Record Grades</span>
+                <span class="action-subtitle">Update assessments and track performance.</span>
+            </button>
+            <button class="quick-action" onclick="showTab('fees')">
+                <i class="fas fa-receipt"></i>
+                <span class="action-title">Manage Fees</span>
+                <span class="action-subtitle">Monitor payments and pending dues.</span>
+            </button>
+        </div>
+
+        <div class="teacher-overview">
+            <div class="summary-card">
+                <span class="summary-label">Total Students</span>
+                <span class="summary-value" id="totalStudentsSummary">0</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Overall Attendance</span>
+                <span class="summary-value" id="overallAttendance">0%</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Average Grade</span>
+                <span class="summary-value" id="overallAverageGrade">0%</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Fees Collected</span>
+                <span class="summary-value" id="totalFeesCollected">Rs 0</span>
+            </div>
+        </div>
+
+        <section class="insights-grid">
+            <div class="data-panel">
+                <h2><i class="fas fa-bell"></i> Attention needed</h2>
+                <p class="summary-trend">Stay ahead of pending approvals and overdue items.</p>
+                <ul class="announcement-list" id="teacherAlerts">
+                    <li class="timeline-item">
+                        <div>
+                            <strong>You're all caught up.</strong>
+                            <div class="meta">No alerts at the moment.</div>
+                        </div>
+                        <span class="status-pill positive"><i class="fas fa-check"></i> Clear</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="data-panel">
+                <h2><i class="fas fa-chart-line"></i> Weekly snapshot</h2>
+                <div class="placeholder-chart" id="teacherTrendPlaceholder">Analytics placeholder</div>
+                <p class="summary-trend" id="trendNarrative">Insights update automatically as you record activity.</p>
+            </div>
+        </section>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="students" onclick="showTab('students')">Students</div>
+            <div class="tab" data-tab="attendance" onclick="showTab('attendance')">Attendance</div>
+            <div class="tab" data-tab="grades" onclick="showTab('grades')">Grades</div>
+            <div class="tab" data-tab="fees" onclick="showTab('fees')">Fees</div>
+            <div class="tab" data-tab="resources" onclick="showTab('resources')">Resources</div>
+            <div class="tab" data-tab="subjects" onclick="showTab('subjects')" id="subjectsTab">Subjects</div>
+        </div>
+
+        <div id="students-tab" class="tab-content active">
+            <div class="main-content">
+                <div class="form-section" id="teacherStudentForm">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Student</h2>
+                    <form id="studentForm">
+                        <div class="student-photo-upload">
+                            <div class="photo-preview" id="photoPreview">
+                                <div class="photo-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <input type="file" id="studentPhoto" accept="image/*" class="hidden">
+                            <button type="button" class="photo-upload-btn" onclick="document.getElementById('studentPhoto').click()">
+                                <i class="fas fa-camera"></i> Upload Photo
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentId">Student ID</label>
+                            <input type="text" id="studentId" required placeholder="e.g., STU001">
+                            <small>This will be used for student login</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required placeholder="e.g., John Smith">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required placeholder="e.g., john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" required placeholder="e.g., 9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course</label>
+                            <select id="course" required>
+                                <option value="">Select Course</option>
+                                <option value="BCA">BCA</option>
+                                <option value="BJMC">BJMC</option>
+                                <option value="BBA">BBA</option>
+                                <option value="B COM">B COM</option>
+                                <option value="B ED">B ED</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="semester">Semester</label>
+                            <select id="semester" required>
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                        <button type="submit">Add Student</button>
+                    </form>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-list"></i> Student Records</h2>
+                    <table id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th id="studentActionsHeader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="attendance-tab" class="tab-content">
+            <div class="main-content">
+                <div class="form-section" id="teacherAttendanceForm">
+                    <h2><i class="fas fa-calendar-check"></i> Mark Attendance</h2>
+                    <div class="attendance-form">
+                        <div class="form-group">
+                            <label for="attendanceDate">Date</label>
+                            <input type="date" id="attendanceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendanceStudent">Student</label>
+                            <select id="attendanceStudent" required>
+                                <option value="">Select Student</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendanceStatus">Status</label>
+                            <select id="attendanceStatus" required>
+                                <option value="present">Present</option>
+                                <option value="absent">Absent</option>
+                                <option value="late">Late</option>
+                                <option value="excused">Excused</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="markAttendance()">Mark Attendance</button>
+                    </div>
+
+                    <h3 style="margin-top: 20px;">This Week's Attendance</h3>
+                    <div class="calendar">
+                        <div class="calendar-day">Mon</div>
+                        <div class="calendar-day">Tue</div>
+                        <div class="calendar-day">Wed</div>
+                        <div class="calendar-day">Thu</div>
+                        <div class="calendar-day">Fri</div>
+                        <div class="calendar-day">Sat</div>
+                        <div class="calendar-day">Sun</div>
+                        <div class="calendar-day present">P</div>
+                        <div class="calendar-day present">P</div>
+                        <div class="calendar-day absent">A</div>
+                        <div class="calendar-day present">P</div>
+                        <div class="calendar-day">-</div>
+                        <div class="calendar-day">-</div>
+                        <div class="calendar-day">-</div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-clipboard-list"></i> Attendance Records</h2>
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Student</th>
+                                <th>Status</th>
+                                <th id="attendanceActionsHeader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="grades-tab" class="tab-content">
+            <div class="main-content">
+                <div class="form-section" id="teacherGradeForm">
+                    <h2><i class="fas fa-clipboard-check"></i> Grade Management</h2>
+                    <div class="form-group">
+                        <label for="gradeStudent">Student</label>
+                        <select id="gradeStudent">
+                            <option value="">Select Student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeSubject">Subject</label>
+                        <select id="gradeSubject">
+                            <option value="">Select Subject</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeScore">Score (%)</label>
+                        <input type="number" id="gradeScore" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeSem">Semester</label>
+                        <select id="gradeSem">
+                            <option value="">Select Semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="addGrade()">Add Grade</button>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-chart-line"></i> Grade Overview</h2>
+                    <table id="gradesTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Semester</th>
+                                <th>Score</th>
+                                <th>Grade</th>
+                                <th id="gradesActionsHeader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="fees-tab" class="tab-content">
+            <div class="main-content">
+                <div class="form-section" id="teacherFeeForm">
+                    <h2><i class="fas fa-money-bill-wave"></i> Fee Management</h2>
+                    <div class="form-group">
+                        <label for="feeStudent">Student</label>
+                        <select id="feeStudent">
+                            <option value="">Select Student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feeAmount">Amount</label>
+                        <input type="number" id="feeAmount" placeholder="Enter amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="feeStatus">Status</label>
+                        <select id="feeStatus">
+                            <option value="paid">Paid</option>
+                            <option value="pending">Pending</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feeDueDate">Due Date</label>
+                        <input type="date" id="feeDueDate">
+                    </div>
+                    <button type="button" onclick="addFee()">Add Fee Record</button>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-receipt"></i> Fee Records</h2>
+                    <div class="fee-summary">
+                        <h3>Fee Status Overview</h3>
+                        <div class="fee-chart">
+                            <div class="fee-item paid">Paid: Rs 0</div>
+                            <div class="fee-item pending">Pending: Rs 0</div>
+                            <div class="fee-item overdue">Overdue: Rs 0</div>
+                        </div>
+                    </div>
+                    <table id="feesTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                                <th id="feesActionsHeader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="resources-tab" class="tab-content">
+            <div class="main-content">
+                <div class="form-section" id="teacherResourceForm">
+                    <h2><i class="fas fa-plus-circle"></i> Add Resources</h2>
+                    <div class="form-group">
+                        <label for="resourceType">Resource Type</label>
+                        <select id="resourceType" onchange="toggleResourceForm()">
+                            <option value="">Select Type</option>
+                            <option value="notes">Notes</option>
+                            <option value="pyq">Previous Year Questions</option>
+                        </select>
+                    </div>
+
+                    <div id="notesForm" class="hidden">
+                        <div class="form-group">
+                            <label for="notesSubject">Subject</label>
+                            <select id="notesSubject">
+                                <option value="">Select Subject</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notesSemester">Semester</label>
+                            <select id="notesSemester">
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notesTitle">Title</label>
+                            <input type="text" id="notesTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="notesFile">Upload File</label>
+                            <input type="file" id="notesFile" accept=".pdf">
+                        </div>
+                        <button type="button" onclick="addNotes()">Add Notes</button>
+                    </div>
+
+                    <div id="pyqForm" class="hidden">
+                        <div class="form-group">
+                            <label for="pyqSubject">Subject</label>
+                            <select id="pyqSubject">
+                                <option value="">Select Subject</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pyqSemester">Semester</label>
+                            <select id="pyqSemester">
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pyqYear">Year</label>
+                            <input type="number" id="pyqYear" min="2000" max="2023">
+                        </div>
+                        <div class="form-group">
+                            <label for="pyqFile">Upload File</label>
+                            <input type="file" id="pyqFile" accept=".pdf">
+                        </div>
+                        <button type="button" onclick="addPYQ()">Add PYQ</button>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-book-open"></i> Study Resources</h2>
+
+                    <div class="notes-section">
+                        <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                        <div id="notesList"></div>
+                    </div>
+
+                    <div class="pyq-section">
+                        <h3><i class="fas fa-file-alt"></i> Previous Year Questions</h3>
+                        <div id="pyqList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="subjects-tab" class="tab-content">
+            <div class="main-content">
+                <div class="form-section" id="teacherSubjectForm">
+                    <h2><i class="fas fa-book"></i> Subject Management</h2>
+                    <div class="form-group">
+                        <label for="newSubject">Add New Subject</label>
+                        <input type="text" id="newSubject" placeholder="Enter subject name">
+                    </div>
+                    <button type="button" onclick="addSubject()">Add Subject</button>
+
+                    <div class="subject-management">
+                        <h3>Current Subjects</h3>
+                        <div class="subject-list" id="subjectList"></div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <h2><i class="fas fa-list"></i> All Subjects</h2>
+                    <table id="subjectTable">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="studentResources" class="student-resources hidden">
+            <h2><i class="fas fa-download"></i> Available Resources</h2>
+            <p>Download notes and previous year questions uploaded by your teachers.</p>
+
+            <div class="resource-cards" id="studentNotesList"></div>
+
+            <div class="resource-cards" id="studentPYQList"></div>
+        </div>
+
+        <footer>
+            <p>Student Management System &copy; 2023 | BCA Minor Project</p>
+        </footer>
+    </div>
+
+    <div id="toastStack" class="toast-stack"></div>
+    <script src="js/app.js"></script>
+</body>
+</html>
+

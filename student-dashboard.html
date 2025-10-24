@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="dashboard" data-role="student">
+    <div id="appContainer" class="container">
+        <header>
+            <div>
+                <h1><i class="fas fa-user-graduate"></i> Student Management System</h1>
+                <p class="subtitle" id="roleSubtitle">Track your progress, deadlines, and shared resources</p>
+            </div>
+            <div class="user-info">
+                <span id="userWelcome">Welcome, User!</span>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <section class="student-overview">
+            <div class="insight-card">
+                <span class="insight-label">Course</span>
+                <span class="insight-value" id="studentCourse">—</span>
+                <span class="summary-trend" id="studentSemester">Semester —</span>
+            </div>
+            <div class="insight-card">
+                <span class="insight-label">Attendance</span>
+                <span class="insight-value" id="attendanceRate">0%</span>
+                <span class="summary-trend" id="attendanceBadge">Attendance updates after your first class.</span>
+            </div>
+            <div class="insight-card">
+                <span class="insight-label">Grade average</span>
+                <span class="insight-value" id="averageGrade">0%</span>
+                <span class="summary-trend" id="gradeBadge">Your assessment insights appear here.</span>
+            </div>
+            <div class="insight-card">
+                <span class="insight-label">Fees status</span>
+                <span class="insight-value" id="feeCollection">Rs 0</span>
+                <span class="summary-trend" id="feeBadge">Pending and paid fees are tracked automatically.</span>
+            </div>
+        </section>
+
+        <section class="insights-grid">
+            <div class="data-panel">
+                <h2><i class="fas fa-calendar-day"></i> Upcoming items</h2>
+                <p class="summary-trend">Stay on top of assignments and assessments assigned by your faculty.</p>
+                <ul class="timeline" id="studentUpcoming">
+                    <li class="timeline-item" data-empty="true">
+                        <div>
+                            <strong>No reminders yet</strong>
+                            <div class="meta">Once your teacher schedules tasks, they will appear here.</div>
+                        </div>
+                        <span class="status-pill"><i class="fas fa-hourglass-half"></i> Waiting</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="data-panel">
+                <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
+                <p class="summary-trend">All shared notes, PYQs, and important notices surface instantly.</p>
+                <ul class="announcement-list" id="studentAnnouncements">
+                    <li class="timeline-item" data-empty="true">
+                        <div>
+                            <strong>Stay tuned for updates</strong>
+                            <div class="meta">Ask your teacher to upload learning resources to see them here.</div>
+                        </div>
+                        <span class="status-pill positive"><i class="fas fa-check"></i> Active</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="students" onclick="showTab('students')">Overview</div>
+            <div class="tab" data-tab="attendance" onclick="showTab('attendance')">Attendance</div>
+            <div class="tab" data-tab="grades" onclick="showTab('grades')">Grades</div>
+            <div class="tab" data-tab="fees" onclick="showTab('fees')">Fees</div>
+            <div class="tab" data-tab="resources" onclick="showTab('resources')">Resources</div>
+        </div>
+
+        <div id="students-tab" class="tab-content active">
+            <div class="student-main">
+                <div class="info-panel">
+                    <h2><i class="fas fa-id-card"></i> Profile snapshot</h2>
+                    <div class="student-photo-upload" style="margin-bottom: 24px;">
+                        <div class="photo-preview" id="studentProfilePhoto">
+                            <div class="photo-placeholder"><i class="fas fa-user"></i></div>
+                        </div>
+                        <div>
+                            <h3 id="studentProfileName">Your Name</h3>
+                            <p class="summary-trend" id="studentProfileEmail">your.email@example.com</p>
+                            <p class="summary-trend" id="studentProfilePhone">Phone number will appear here</p>
+                        </div>
+                    </div>
+                    <div class="info-card" style="box-shadow:none;padding:0;background:transparent;">
+                        <ul class="hero-highlights" id="studentProfileDetails">
+                            <li><i class="fas fa-hashtag"></i> Student ID: <span id="studentProfileId">—</span></li>
+                            <li><i class="fas fa-book"></i> Course: <span id="studentProfileCourse">—</span></li>
+                            <li><i class="fas fa-layer-group"></i> Semester: <span id="studentProfileSemester">—</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-panel">
+                    <h2><i class="fas fa-users"></i> Cohort overview</h2>
+                    <p class="summary-trend" style="margin-bottom: 14px;">See the classmates who collaborate and share resources with you.</p>
+                    <table id="studentTable" data-view="student">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="attendance-tab" class="tab-content">
+            <div class="student-main">
+                <div class="info-panel">
+                    <h2><i class="fas fa-chart-line"></i> Attendance summary</h2>
+                    <p class="summary-trend">Monitor weekly consistency and ensure you meet minimum requirements.</p>
+                    <div class="calendar" id="studentAttendanceCalendar">
+                        <div class="calendar-day">Mon</div>
+                        <div class="calendar-day">Tue</div>
+                        <div class="calendar-day">Wed</div>
+                        <div class="calendar-day">Thu</div>
+                        <div class="calendar-day">Fri</div>
+                        <div class="calendar-day">Sat</div>
+                        <div class="calendar-day">Sun</div>
+                    </div>
+                </div>
+                <div class="data-panel">
+                    <h2><i class="fas fa-clipboard-list"></i> Attendance history</h2>
+                    <table id="attendanceTable" data-view="student">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="grades-tab" class="tab-content">
+            <div class="student-main">
+                <div class="info-panel">
+                    <h2><i class="fas fa-star"></i> Grade breakdown</h2>
+                    <p class="summary-trend">Review recent assessments and stay aware of your strengths.</p>
+                    <ul class="hero-highlights" id="gradeHighlights">
+                        <li><i class="fas fa-arrow-trend-up"></i> Best subject: <span id="gradeBestSubject">—</span></li>
+                        <li><i class="fas fa-lightbulb"></i> Focus area: <span id="gradeFocusSubject">—</span></li>
+                        <li><i class="fas fa-bullseye"></i> Target average: <span id="gradeTarget">75%</span></li>
+                    </ul>
+                </div>
+                <div class="data-panel">
+                    <h2><i class="fas fa-table"></i> Assessment history</h2>
+                    <table id="gradesTable" data-view="student">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Semester</th>
+                                <th>Score</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="fees-tab" class="tab-content">
+            <div class="student-main">
+                <div class="info-panel">
+                    <h2><i class="fas fa-wallet"></i> Fee insights</h2>
+                    <p class="summary-trend">Check payments, pending dues, and important deadlines.</p>
+                    <ul class="hero-highlights" id="feeHighlights">
+                        <li><i class="fas fa-receipt"></i> Paid so far: <span id="feePaidSummary">Rs 0</span></li>
+                        <li><i class="fas fa-clock"></i> Pending amount: <span id="feePendingSummary">Rs 0</span></li>
+                        <li><i class="fas fa-exclamation-triangle"></i> Overdue amount: <span id="feeOverdueSummary">Rs 0</span></li>
+                    </ul>
+                </div>
+                <div class="data-panel">
+                    <h2><i class="fas fa-list-ul"></i> Fee history</h2>
+                    <table id="feesTable" data-view="student">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Due date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="resources-tab" class="tab-content">
+            <div class="student-main">
+                <div class="info-panel">
+                    <h2><i class="fas fa-search"></i> Find resources</h2>
+                    <p class="summary-trend">Filter notes and previous year questions by subject and semester.</p>
+                    <div class="resource-filters">
+                        <select id="studentResourceSubjectFilter">
+                            <option value="all">All subjects</option>
+                        </select>
+                        <select id="studentResourceSemesterFilter">
+                            <option value="all">All semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="data-panel">
+                    <h2><i class="fas fa-folder-open"></i> Available downloads</h2>
+                    <div class="resource-grid" id="studentNotesList"></div>
+                    <div class="resource-grid" id="studentPYQList"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Student Management System &copy; 2023 | BCA Minor Project</p>
+        </footer>
+    </div>
+
+    <div id="toastStack" class="toast-stack"></div>
+    <script src="js/app.js"></script>
+</body>
+</html>
